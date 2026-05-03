@@ -1,7 +1,13 @@
+/* body {
+  height: 100%;
+  margin: 0;
+}
 .App {
   text-align: center;
   font-family: Arial, sans-serif;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .App-logo {
@@ -42,4 +48,29 @@
   padding: 20px;
   max-width: 800px;
   margin: 0 auto;
+
+  flex: 1;
+} */
+
+.App {
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  background-color: #f5f6fa;
+  display: flex;
+  flex-direction: column;
+}
+
+.contenu {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  flex: 1;
+}
+
+@media (max-width: 600px) {
+  .contenu {
+    padding: 12px;
+  }
 }

@@ -3,11 +3,13 @@ import "./App.css";
 import DetailLigne from "./DetailLigne";
 import Header from "./Header";
 import Recherche from "./Recherche";
-import ListeLignes from "./ListeLignes";
+// import ListeLignes from "./ListeLignes";
 import Footer from "./Footer";
 import LigneBus from "./LigneBus";
+import Compteur from "./Compteur";
 
 function App() {
+  const [compteur, setCompteur] = useState(0);
   const [ligneSelectionnee, setLigneSelectionnee] = useState(null);
   const [recherche, setRecherche] = useState("");
   const lignes = [
@@ -137,26 +139,35 @@ function App() {
       <Header />
 
       <main className="contenu">
-        <Recherche valeur={recherche} onChange={setRecherche} />
+        <Recherche
+          valeur={recherche}
+          onChange={setRecherche}
+          onSubmit={() => setCompteur(compteur + 1)}
+        />
+        <Compteur valeur={compteur} />
 
         <p className="resultat-recherche">
           {lignesFiltrees.length} ligne{lignesFiltrees.length > 1 ? "s" : ""}{" "}
           trouvée
           {lignesFiltrees.length > 1 ? "s" : ""}
         </p>
-        {lignesFiltrees.map((ligne) => (
-          <LigneBus
-            key={ligne.id}
-            numero={ligne.numero}
-            depart={ligne.depart}
-            arrivee={ligne.arrivee}
-            arrets={ligne.arrets}
-            estSelectionnee={
-              ligneSelectionnee && ligneSelectionnee.id === ligne.id
-            }
-            onClick={() => handleClickLigne(ligne)}
-          />
-        ))}
+        {lignesFiltrees.length === 0 ? (
+          <p className="aucun-resultat">Aucune ligne trouvée</p>
+        ) : (
+          lignesFiltrees.map((ligne) => (
+            <LigneBus
+              key={ligne.id}
+              numero={ligne.numero}
+              depart={ligne.depart}
+              arrivee={ligne.arrivee}
+              arrets={ligne.arrets}
+              estSelectionnee={
+                ligneSelectionnee && ligneSelectionnee.id === ligne.id
+              }
+              onClick={() => handleClickLigne(ligne)}
+            />
+          ))
+        )}
 
         {ligneSelectionnee && <DetailLigne ligne={ligneSelectionnee} />}
       </main>

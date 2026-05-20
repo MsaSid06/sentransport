@@ -1,6 +1,6 @@
 import "./Recherche.css";
 
-function Recherche({ valeur, onChange, onSubmit }) {
+function Recherche({ valeur, onChange, onSubmit, chargerLignes }) {
   return (
     <div className="recherche">
       <form
@@ -18,6 +18,14 @@ function Recherche({ valeur, onChange, onSubmit }) {
         />
         <button onClick={() => onChange("")} className="recherche-btn">
           Effacer
+        </button>
+
+        <button
+          onClick={chargerLignes}
+          className="recherche-btn"
+          style={{ backgroundColor: "blue" }}
+        >
+          Recharger
         </button>
       </form>
     </div>

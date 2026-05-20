@@ -3,7 +3,7 @@
 }
 
 .recherche-input {
-  width: 80%;
+  width: 40%;
   padding: 12px 16px;
   margin-right: 20px;
   font-size: 1rem;
@@ -24,6 +24,7 @@
 
 .recherche-btn {
   padding: 12px 16px;
+  margin-right: 10px;
   background-color: #e74c3c;
   color: white;
   border: none;

@@ -10,6 +10,13 @@ with open("lignes_ddd.json", "r", encoding="utf-8") as f:
     lignes = json.load(f)
 
 
+with open("arrets.json", "r") as f:
+    arrets = json.load(f)
+
+@app.route("/arrets")
+def get_arrets():
+    return jsonify(arrets)
+
 @app.route("/")
 def accueil():
     return jsonify({
@@ -42,8 +49,8 @@ def get_ligne(ligne_id):
     return jsonify(ligne)
 
 # Exercice 1 : Tous les arrêts sans doublons
-@app.route("/arrets")
-def get_arrets():
+@app.route("/arret")
+def get_arret():
 
     arrets = set()
 

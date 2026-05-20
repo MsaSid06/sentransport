@@ -6,6 +6,7 @@ import Recherche from "./Recherche";
 import Footer from "./Footer";
 import LigneBus from "./LigneBus";
 import Compteur from "./Compteur";
+import Carte from "./Carte";
 // import ListeLignes from "./ListeLignes";
 
 function App() {
@@ -18,22 +19,42 @@ function App() {
   const [erreur, setErreur] = useState(null);
 
   // 2. Charger les données au démarrage
-  useEffect(() => {
+  // useEffect(() => {
+  //   fetch("http://localhost:5000/lignes")
+  //     .then((response) => {
+  //       if (!response.ok) {
+  //         throw new Error("Erreur serveur : " + response.status);
+  //       }
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       setLignes(data);
+  //       setChargement(false);
+  //     })
+  //     .catch((error) => {
+  //       setErreur(error.message);
+  //       setChargement(false);
+  //     });
+  // }, []);
+
+  // EXO 1 - FETCH LISTE
+  const chargerLignes = () => {
+    setChargement(true);
+
     fetch("http://localhost:5000/lignes")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Erreur serveur : " + response.status);
-        }
-        return response.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         setLignes(data);
         setChargement(false);
       })
-      .catch((error) => {
-        setErreur(error.message);
+      .catch((err) => {
+        setErreur(err.message);
         setChargement(false);
       });
+  };
+
+  useEffect(() => {
+    chargerLignes();
   }, []);
 
   // 3. Le reste ne change pas (filtre, clic, etc.)
@@ -44,13 +65,13 @@ function App() {
       ligne.arrivee.toLowerCase().includes(recherche.toLowerCase()) ||
       ligne.numero.includes(recherche),
   );
-  function handleClickLigne(ligne) {
-    if (ligneSelectionnee && ligneSelectionnee.id === ligne.id) {
-      setLigneSelectionnee(null); // re - clic = deselectioner
-    } else {
-      setLigneSelectionnee(ligne); // premier clic = selectionner
-    }
-  }
+  // function handleClickLigne(ligne) {
+  //   if (ligneSelectionnee && ligneSelectionnee.id === ligne.id) {
+  //     setLigneSelectionnee(null); // re - clic = deselectioner
+  //   } else {
+  //     setLigneSelectionnee(ligne); // premier clic = selectionner
+  //   }
+  // }
   if (chargement) {
     return (
       <div className="App">
@@ -82,6 +103,26 @@ function App() {
     );
   }
 
+  // EXO 3 FETCH DÉTAIL AU CLIC
+  const chargerDetails = (id) => {
+    fetch(`http://localhost:5000/lignes/${id}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Erreur chargement détail");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setLigneSelectionnee(data);
+      })
+      .catch((err) => {
+        setErreur(err.message);
+      });
+  };
+
+  function handleClickLigne(ligne) {
+    chargerDetails(ligne.id);
+  }
   return (
     <div className="App">
       <Header />
@@ -91,6 +132,7 @@ function App() {
           valeur={recherche}
           onChange={setRecherche}
           onSubmit={() => setCompteur(compteur + 1)}
+          chargerLignes={chargerLignes}
         />
         <Compteur valeur={compteur} />
 
@@ -118,6 +160,7 @@ function App() {
         )}
 
         {ligneSelectionnee && <DetailLigne ligne={ligneSelectionnee} />}
+        <Carte />
       </main>
 
       <Footer />

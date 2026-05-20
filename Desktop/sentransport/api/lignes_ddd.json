@@ -98,5 +98,41 @@
       "HLM",
       "Sandaga"
     ]
+  },
+  {
+    "id": 7,
+    "numero": "30",
+    "depart": "Bambilor",
+    "arrivee": "Plateau",
+    "arrets": 13,
+    "color": "Cyan",
+    "listeArrets": [
+      "Bambilor Centre",
+      "Jaxaay",
+      "Keury Kao",
+      "Keur Massar",
+      "Pikine",
+      "Grand Yoff",
+      "Colobane",
+      "Plateau"
+    ]
+  },
+  {
+    "id": 8,
+    "numero": "45",
+    "depart": "Rufisque",
+    "arrivee": "Almadies",
+    "arrets": 15,
+    "color": "Pink",
+    "listeArrets": [
+      "Rufisque Centre",
+      "Bargny",
+      "Diamniadio",
+      "Pikine",
+      "Grand Dakar",
+      "Fann",
+      "Mermoz",
+      "Almadies"
+    ]
   }
 ]

@@ -7,6 +7,8 @@ import Footer from "./Footer";
 import LigneBus from "./LigneBus";
 import Compteur from "./Compteur";
 import Carte from "./Carte";
+import SignalerIncident from "./SignalerIncident";
+import Meteo from "./Meteo";
 // import ListeLignes from "./ListeLignes";
 
 function App() {
@@ -128,6 +130,7 @@ function App() {
       <Header />
 
       <main className="contenu">
+        <Meteo />
         <Recherche
           valeur={recherche}
           onChange={setRecherche}
@@ -161,6 +164,7 @@ function App() {
 
         {ligneSelectionnee && <DetailLigne ligne={ligneSelectionnee} />}
         <Carte />
+        <SignalerIncident />
       </main>
 
       <Footer />

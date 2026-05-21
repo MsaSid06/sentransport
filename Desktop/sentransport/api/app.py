@@ -1,6 +1,8 @@
 import json
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+# from flask import Flask, jsonify, request
+
 
 app = Flask(__name__)
 CORS(app)
@@ -97,6 +99,37 @@ def rechercher_lignes():
     ]
 
     return jsonify(resultats)
+
+
+incidents = []
+
+@app.route("/incidents", methods=["GET"])
+def get_incidents():
+    return jsonify(incidents)
+
+@app.route("/incidents", methods=["POST"])
+def post_incident():
+
+    data = request.get_json()
+
+    if (
+        not data
+        or "ligne" not in data
+        or "description" not in data
+    ):
+        return jsonify({
+            "erreur": "Champs requis manquants"
+        }), 400
+
+    incident = {
+        "id": len(incidents) + 1,
+        "ligne": data["ligne"],
+        "description": data["description"],
+        "lieu": data.get("lieu", "Non precise"),
+    }
+
+    incidents.append(incident)
+    return jsonify(incident), 201
 
 
 

@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./Carte.css";
+import { useMap } from "react-leaflet";
 
 // Corriger les icônes Leaflet (bug webpack)
 delete L.Icon.Default.prototype._getIconUrl;
@@ -86,15 +87,74 @@ function Carte() {
     }
   }, [positionUtilisateur, arrets]);
 
+  const iconProche = new L.Icon({
+    iconUrl:
+      "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+    shadowUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+  });
+
+  function CentrerBouton({ position }) {
+    const map = useMap();
+
+    return (
+      <button
+        className="centrer"
+        onClick={() => {
+          if (position) {
+            map.setView(position, 15);
+          }
+        }}
+      >
+        Centrer
+      </button>
+    );
+  }
+
+  const [topArrets, setTopArrets] = useState([]);
+  
+  useEffect(() => {
+    if (positionUtilisateur && arrets.length > 0) {
+      const avecDistance = arrets.map((a) => ({
+        ...a,
+        distance: calculerDistance(
+          positionUtilisateur[0],
+          positionUtilisateur[1],
+          a.lat,
+          a.lon,
+        ),
+      }));
+
+      const tries = avecDistance.sort((a, b) => a.distance - b.distance);
+
+      setTopArrets(tries.slice(0, 3));
+    }
+  }, [positionUtilisateur, arrets]);
   return (
     <div className="carte-container">
       <h2 className="carte-titre">Carte des arrêts</h2>
 
-      {arretProche && (
+      {/* {arretProche && (
         <p className="arret-proche">
           Arrêt le plus proche : <strong>{arretProche.nom}</strong> (
           {arretProche.distance.toFixed(1)} km)
         </p>
+      )} */}
+
+      {topArrets.length > 0 && (
+        <div className="arret-proche">
+          <h3>3 arrêts les plus proches</h3>
+
+          <ul>
+            {topArrets.map((a) => (
+              <li key={a.id}>
+                <strong>{a.nom}</strong> - {a.distance.toFixed(2)} km
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
 
       <MapContainer center={DAKAR} zoom={13} className="carte">
@@ -104,7 +164,11 @@ function Carte() {
         />
 
         {arrets.map((a) => (
-          <Marker key={a.id} position={[a.lat, a.lon]}>
+          <Marker
+            key={a.id}
+            position={[a.lat, a.lon]}
+            icon={arretProche?.id === a.id ? iconProche : new L.Icon.Default()}
+          >
             <Popup>
               <strong>{a.nom}</strong>
               <br />
@@ -117,6 +181,9 @@ function Carte() {
           <Marker position={positionUtilisateur}>
             <Popup>Vous êtes ici</Popup>
           </Marker>
+        )}
+        {positionUtilisateur && (
+          <CentrerBouton position={positionUtilisateur} />
         )}
       </MapContainer>
     </div>
